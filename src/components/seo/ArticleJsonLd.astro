@@ -1,0 +1,23 @@
+---
+const { frontmatter, lang, url, slug } = Astro.props;
+const SITE = 'https://your-site.com';
+const published = new Date(frontmatter.date).toISOString();
+const cleanSlug = (slug || '').replace(/^(en|it)\//, '').replace(/\.md$/, '');
+const ogPath = cleanSlug ? `/og/${lang}/${cleanSlug}.png` : '/og-default.png';
+const image = frontmatter.cover
+  ? (frontmatter.cover.startsWith('http') ? frontmatter.cover : `${SITE}${frontmatter.cover}`)
+  : `${SITE}${ogPath}`;
+---
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": frontmatter.title,
+  "description": frontmatter.description,
+  "image": image,
+  "datePublished": published,
+  "dateModified": frontmatter.updatedDate ? new Date(frontmatter.updatedDate).toISOString() : published,
+  "inLanguage": lang,
+  "author": { "@type": "Person", "name": "Your Name", "url": SITE },
+  "publisher": { "@type": "Person", "name": "Your Name", "url": SITE, "logo": { "@type": "ImageObject", "url": `${SITE}/brand/dm-mark.svg` } },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": url }
+})} />

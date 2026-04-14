@@ -1,0 +1,96 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Masthead from '../components/layout/Masthead.astro';
+import Footer from '../components/layout/Footer.astro';
+import Notice from '../components/layout/Notice.astro';
+import PersonJsonLd from '../components/seo/PersonJsonLd.astro';
+import '../styles/global.css';
+
+const {
+  title = 'Your Name.',
+  description = 'A field journal on AI, agents and the craft of shipping software.',
+  lang = 'en',
+  og = '/og-default.png',
+  canonical,
+  ogType = 'website',
+  article,
+  noindex = false,
+} = Astro.props;
+
+const SITE = 'https://your-site.com';
+const pathname = Astro.url.pathname;
+const canonicalUrl = canonical || `${SITE}${pathname}`;
+const altLang = lang === 'en' ? 'it' : 'en';
+const altPath = pathname.replace(new RegExp(`^/${lang}/`), `/${altLang}/`);
+const altUrl = `${SITE}${altPath}`;
+const ogImage = og.startsWith('http') ? og : `${SITE}${og}`;
+const xDefaultUrl = `${SITE}${pathname.replace(/^\/(en|it)\//, '/en/')}`;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={lang} href={canonicalUrl} />
+    <link rel="alternate" hreflang={altLang} href={altUrl} />
+    <link rel="alternate" hreflang="x-default" href={xDefaultUrl} />
+    <link rel="alternate" type="application/rss+xml" title="Your Name. — Writing" href={`${SITE}/rss.xml`} />
+    {lang === 'it' && <link rel="alternate" type="application/rss+xml" title="Your Name. — Scritti" href={`${SITE}/rss-it.xml`} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="Your Name." />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'it_IT'} />
+    <meta property="og:locale:alternate" content={altLang === 'en' ? 'en_US' : 'it_IT'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:site" content="@yourhandle" />
+    <meta name="twitter:creator" content="@yourhandle" />
+    {article?.publishedTime && <meta property="article:published_time" content={article.publishedTime} />}
+    {article?.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+    {article?.author && <meta property="article:author" content={article.author} />}
+    {article?.section && <meta property="article:section" content={article.section} />}
+    <PersonJsonLd />
+    <ClientRouter />
+    <!-- GA4 loaded by Notice.astro after consent -->
+  </head>
+  <body class="grain">
+    <div id="scroll-progress"></div>
+    <div class="scanline" aria-hidden="true"></div>
+    <Masthead lang={lang} />
+    <main><slot /></main>
+    <Footer lang={lang} />
+    <Notice lang={lang} />
+    <script>
+      import { initCursor, initRevealOnScroll } from '../lib/motion';
+      document.addEventListener('astro:page-load', () => {
+        initCursor();
+        initRevealOnScroll();
+
+        // Scroll progress bar
+        const bar = document.getElementById('scroll-progress');
+        if (bar) {
+          const updateProgress = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+            bar.style.transform = `scaleX(${progress})`;
+          };
+          window.addEventListener('scroll', updateProgress, { passive: true });
+          updateProgress();
+        }
+      });
+    </script>
+  </body>
+</html>

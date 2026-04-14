@@ -1,0 +1,40 @@
+{
+  "topics": [
+    {
+      "id": "example-getting-started",
+      "title_en": "Getting Started with Your Topic",
+      "title_it": "Iniziare con il Tuo Argomento",
+      "cluster": "your-cluster-1",
+      "priority": 1,
+      "target_keyword_en": "your main keyword",
+      "target_keyword_it": "la tua parola chiave",
+      "secondary_keywords": ["related term 1", "related term 2"],
+      "status": "pending",
+      "generated_date": null
+    },
+    {
+      "id": "example-advanced-guide",
+      "title_en": "Advanced Guide to Your Topic",
+      "title_it": "Guida Avanzata al Tuo Argomento",
+      "cluster": "your-cluster-1",
+      "priority": 2,
+      "target_keyword_en": "advanced keyword",
+      "target_keyword_it": "parola chiave avanzata",
+      "secondary_keywords": ["deep dive", "expert tips"],
+      "status": "pending",
+      "generated_date": null
+    },
+    {
+      "id": "example-italian-only",
+      "title_en": null,
+      "title_it": "Guida Esclusiva in Italiano",
+      "cluster": "your-cluster-2",
+      "priority": 1,
+      "target_keyword_en": null,
+      "target_keyword_it": "guida italiano",
+      "secondary_keywords": ["tutorial italiano", "guida pratica"],
+      "status": "pending",
+      "generated_date": null
+    }
+  ]
+}
