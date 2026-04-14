@@ -1,0 +1,26 @@
+{
+  "name": "astro-content-engine",
+  "version": "1.0.0",
+  "description": "SEO-optimized content generation pipeline for Astro blogs with Gemini AI",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "prebuild": "node scripts/generate-post-og.mjs && node scripts/generate-llms.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "generate": "node scripts/generate-article.mjs"
+  },
+  "dependencies": {
+    "astro": "^6.1.0",
+    "@astrojs/sitemap": "^6.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.0",
+    "satori": "^0.12.0"
+  },
+  "keywords": ["astro", "seo", "content-generation", "gemini", "blog", "bilingual", "i18n"],
+  "license": "MIT",
+  "author": "Daniele Messi <github@daniele-messi.com>"
+}

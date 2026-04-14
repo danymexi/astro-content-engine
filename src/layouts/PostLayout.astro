@@ -1,0 +1,146 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Marginalia from '../components/blog/Marginalia.astro';
+import ArticleJsonLd from '../components/seo/ArticleJsonLd.astro';
+import BreadcrumbJsonLd from '../components/seo/BreadcrumbJsonLd.astro';
+import RelatedPosts from '../components/blog/RelatedPosts.astro';
+const { frontmatter, lang = 'en', slug = '', post } = Astro.props;
+const date = new Date(frontmatter.date);
+const dateStr = date.toLocaleDateString(lang === 'en' ? 'en-US' : 'it-IT', { year: 'numeric', month: 'long', day: 'numeric' });
+const rt = typeof frontmatter.readingTime === 'number' ? `${frontmatter.readingTime} min read` : (frontmatter.readingTime || '8 min read');
+const SITE = 'https://your-site.com';
+const canonicalUrl = `${SITE}${Astro.url.pathname}`;
+const publishedTime = date.toISOString();
+const cleanSlug = String(slug).replace(/^(en|it)\//, '').replace(/\.md$/, '');
+const perPostOg = cleanSlug ? `/og/${lang}/${cleanSlug}.png` : '/og-default.png';
+const ogImage = frontmatter.cover || perPostOg;
+const writingLabel = lang === 'it' ? 'Scritti' : 'Writing';
+const homeLabel = 'Home';
+const breadcrumbItems = [
+  { name: homeLabel, url: `${SITE}/${lang}/` },
+  { name: writingLabel, url: `${SITE}/${lang}/blog/` },
+  { name: frontmatter.title, url: canonicalUrl },
+];
+---
+<BaseLayout
+  lang={lang}
+  title={`${frontmatter.title} — Your Name.`}
+  description={frontmatter.description}
+  og={ogImage}
+  ogType="article"
+  canonical={canonicalUrl}
+  article={{ publishedTime, modifiedTime: publishedTime, author: 'Your Name', section: 'Writing' }}
+>
+  <ArticleJsonLd frontmatter={frontmatter} lang={lang} url={canonicalUrl} slug={cleanSlug} />
+  <BreadcrumbJsonLd items={breadcrumbItems} />
+  <article class="bg-paper">
+    <header class="px-8 pt-16 pb-8 max-w-[780px] mx-auto text-center">
+      <nav class="text-[10px] font-mono text-ink-muted tracking-wider uppercase mb-6" aria-label="Breadcrumb">
+        <a href={`/${lang}/`} class="hover:text-accent transition-colors">{homeLabel}</a>
+        <span class="text-accent mx-2">/</span>
+        <a href={`/${lang}/blog/`} class="hover:text-accent transition-colors">{writingLabel}</a>
+        <span class="text-accent mx-2">/</span>
+        <span>{frontmatter.title}</span>
+      </nav>
+      <div class="text-[10px] font-bold tracking-wider uppercase text-accent mb-6">
+        {frontmatter.category || 'Essay'} · {rt}
+      </div>
+      <h1 data-clip-reveal class="font-display font-black text-3xl sm:text-4xl md:text-6xl leading-[0.9] tracking-[-0.03em] mb-6">
+        {frontmatter.title}
+      </h1>
+      {frontmatter.description && (
+        <p data-fade-section class="font-serif italic text-base md:text-lg text-ink-soft leading-relaxed max-w-xl mx-auto mb-8">
+          {frontmatter.description}
+        </p>
+      )}
+      <div class="text-[10px] font-semibold tracking-wider uppercase text-ink-muted">
+        By Your Name · {dateStr} · Geneva
+      </div>
+    </header>
+
+    {frontmatter.cover && (
+      <div class="mx-8 my-6 aspect-[16/7] bg-cover bg-center" style={`background-image:url(${frontmatter.cover})`}></div>
+    )}
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_640px_1fr] gap-6 px-8 py-10 pb-20">
+      <Marginalia sections={frontmatter.sections || ['intro']} />
+      <div data-fade-section class="prose-essay font-serif text-[19px] leading-[1.65] text-ink max-w-none">
+        <slot />
+      </div>
+      <aside class="hidden lg:block"></aside>
+    </div>
+    {post && <div data-fade-section><RelatedPosts current={post} lang={lang} /></div>}
+  </article>
+</BaseLayout>
+
+<style is:global>
+  .prose-essay > p { margin-top: 1.1em; }
+  .prose-essay > p:first-of-type::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 68px;
+    line-height: 0.85;
+    font-weight: 800;
+    margin: 4px 10px -6px 0;
+    color: var(--color-accent);
+  }
+  @media (min-width: 768px) {
+    .prose-essay > p:first-of-type::first-letter {
+      font-size: 96px;
+      margin: 6px 12px -8px 0;
+    }
+  }
+  .prose-essay blockquote {
+    font-family: var(--font-display);
+    font-size: 24px;
+    line-height: 1.35;
+    font-weight: 600;
+    border-left: 3px solid var(--color-accent);
+    padding-left: 18px;
+    margin: 1.5em 0;
+    font-style: normal;
+    color: var(--color-ink);
+  }
+  .prose-essay h2 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+  }
+  .prose-essay h3 { font-family: var(--font-display); font-size: 22px; font-weight: 800; margin-top: 1.5em; margin-bottom: 0.4em; }
+  .prose-essay a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
+  .prose-essay ul { margin: 1em 0; padding-left: 1.2em; list-style: disc; }
+  .prose-essay ol { margin: 1em 0; padding-left: 1.2em; list-style: decimal; }
+  .prose-essay li { margin: 0.3em 0; }
+  .prose-essay code { font-family: var(--font-mono); font-size: 0.85em; background: rgba(26,26,26,0.06); padding: 2px 6px; border-radius: 3px; }
+  .prose-essay pre { background: var(--color-noir); color: var(--color-paper); padding: 1em; margin: 1.5em 0; overflow-x: auto; font-size: 13px; }
+  .prose-essay pre code { background: transparent; padding: 0; color: inherit; }
+  .prose-essay img { margin: 1.5em 0; max-width: 100%; }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const article = document.querySelector('.prose-essay');
+    const asides = article?.parentElement?.querySelectorAll('aside');
+    const target = asides && asides.length >= 1 ? asides[asides.length - 1] : null;
+    if (!article || !target) return;
+    const headings = article.querySelectorAll('h2');
+    if (headings.length < 3) return;
+
+    const list = document.createElement('div');
+    list.className = 'sticky top-20 font-mono text-[10px] text-ink-muted uppercase tracking-wider pt-20';
+    list.innerHTML = '<div class="text-accent font-bold mb-3">CONTENTS</div>';
+    headings.forEach((h, i) => {
+      if (!h.id) h.id = 'sec-' + (i + 1);
+      const a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.className = 'block py-1 hover:text-accent transition-colors normal-case font-sans text-[11px] text-ink-soft';
+      a.textContent = h.textContent;
+      list.appendChild(a);
+    });
+    target.innerHTML = '';
+    target.appendChild(list);
+  });
+</script>

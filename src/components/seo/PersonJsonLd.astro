@@ -1,0 +1,36 @@
+---
+const SITE = 'https://your-site.com';
+---
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Your Name",
+  "url": SITE,
+  "image": `${SITE}/og-default.png`,
+  "jobTitle": "Senior Content & Digital Experiences Manager",
+  "worksFor": { "@type": "Organization", "name": "Your Company" },
+  "address": { "@type": "PostalAddress", "addressLocality": "Geneva", "addressCountry": "CH" },
+  "sameAs": [
+    "https://www.linkedin.com/in/daniele-messi/",
+    "https://github.com/yourusername",
+    "https://blog.st.com",
+    "https://spazioitech.it"
+  ],
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "Università degli Studi di Milano-Bicocca" }
+  ]
+})} />
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Your Name.",
+  "url": SITE,
+  "inLanguage": ["en", "it"],
+  "publisher": { "@type": "Person", "name": "Your Name" },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "https://your-site.com/en/blog/?q={search_term_string}" },
+    "query-input": "required name=search_term_string"
+  }
+})} />
