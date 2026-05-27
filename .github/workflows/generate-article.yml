@@ -1,9 +1,9 @@
 name: Generate Article
 
 on:
-  schedule:
-    # Mon, Wed, Fri at 08:00 UTC
-    - cron: '0 8 * * 1,3,5'
+  # Manual-only: this is a public template repo, not a live generator. Running on
+  # a schedule here just fails (no package-lock.json / no GEMINI_API_KEY secret)
+  # and emails the owner. Trigger by hand to demo the pipeline.
   workflow_dispatch:
     inputs:
       topic_id:
