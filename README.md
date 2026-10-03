@@ -2,7 +2,6 @@
 
 A production-ready, SEO-optimized content generation pipeline for Astro blogs. Generates bilingual articles (EN/IT) using Google Gemini, with automatic keyword targeting, internal linking, OG image generation, and scheduled publishing via GitHub Actions.
 
-Built and battle-tested on [daniele-messi.com](https://daniele-messi.com).
 
 ## Features
 
